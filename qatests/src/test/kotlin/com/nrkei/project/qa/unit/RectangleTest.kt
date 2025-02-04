@@ -4,9 +4,9 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-package com.nrkei.project.template.unit
+package com.nrkei.project.qa.unit
 
-import com.nrkei.project.template.Rectangle
+import com.nrkei.project.qa.Rectangle
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
