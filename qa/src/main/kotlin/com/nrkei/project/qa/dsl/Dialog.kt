@@ -1,7 +1,13 @@
+/*
+ * Copyright (c) 2025 by Fred George
+ * @author: Fred George  fredgeorge@acm.org
+ * Licensed under the MIT License; see LICENSE file in root.
+ */
+
 package com.nrkei.project.qa.dsl
 
-import com.nrkei.project.qa.model.DialogStatus
-import com.nrkei.project.qa.model.DialogStatus.NOT_STARTED
+import com.nrkei.project.qa.model.DialogConclusion
+import com.nrkei.project.qa.model.DialogConclusion.NOT_STARTED
 import com.nrkei.project.qa.model.Question
 
 // DSL syntax to specify a series of questions
@@ -22,7 +28,7 @@ class Dialog internal constructor() {
     infix fun ask(question: Question) =
         QuestionBuilder(question).also {questionBuilders.add(it)}
 
-    fun status() = NOT_STARTED
+    fun conclusion() = NOT_STARTED
 }
 
 class QuestionBuilder internal constructor(private val question: Question) {
@@ -39,6 +45,6 @@ class AnswersBuilder internal constructor() {
 
     infix fun answer(value: Any) = this
 
-    infix fun conclude(status: DialogStatus) {
+    infix fun conclude(status: DialogConclusion) {
     }
 }

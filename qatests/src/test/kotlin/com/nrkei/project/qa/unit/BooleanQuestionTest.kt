@@ -1,9 +1,15 @@
+/*
+ * Copyright (c) 2025 by Fred George
+ * @author: Fred George  fredgeorge@acm.org
+ * Licensed under the MIT License; see LICENSE file in root.
+ */
+
 package com.nrkei.project.qa.unit
 
 import org.junit.jupiter.api.Test
 import com.nrkei.project.qa.dsl.dialog
 import com.nrkei.project.qa.model.BooleanQuestion
-import com.nrkei.project.qa.model.DialogStatus.*
+import com.nrkei.project.qa.model.DialogConclusion.*
 import org.junit.jupiter.api.Assertions.assertEquals
 
 // Ensures that a true/false question works
@@ -18,7 +24,7 @@ class BooleanQuestionTest {
                 on answer false conclude FAILED
             }
         }.also { dialog ->
-            assertEquals(NOT_STARTED, dialog.status())
+            assertEquals(NOT_STARTED, dialog.conclusion())
         }
     }
 }
