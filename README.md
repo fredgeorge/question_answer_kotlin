@@ -1,45 +1,31 @@
-### kotlin_template
+### question_answer_kotlin
 
 Copyright (c) 2025 by Fred George  
 author: Fred George  fredgeorge@acm.org  
 Licensed under the MIT License; see LICENSE file in root.
 
 
-## Starting template for Kotlin project using Gradle
+## Question / Answer Model in Kotlin
 
-Kotlin is relatively easy to set up with IntelliJ IDEA. 
-Gradle is used for building and testing the project, and is a 
-prerequisite. Install if necessary.
-The following instructions are for installing the code 
-in IntelliJ IDEA by JetBrains. 
-Adapt as necessary for your environment.
+A model for building a series of questions and answers as a dialog
+with various users. Based on Answers, the next relevant Question 
+will be presented. Capabilities include:
 
-Note: This implementation was set up to use:
-
-- IntelliJ 2024.3.2.2 (Ultimate Edition)
-- Kotlin 2.1.10
-- Java SDK 23 (Oracle)
-- Gradle 8.12.1
-- JUnit 5.11.4 for testing
-
-Open the reference code:
-
-- Download the source code from github.com/fredgeorge
-    - Clone, or pull and extract the zip
-- Open IntelliJ
-- Choose "Open" (it's a Gradle project)
-- Navigate to the reference code root, and enter
-
-Source and test directories should already be tagged as such,
-with test directories in green.
-
-Confirm that everything builds correctly (and necessary libraries exist).
-There is a sample class, Rectangle, with a corresponding
-test, RectangleTest. The test should run successfully
-from the Gradle __test__ task.
-
-Update the following:
-
-- In settings.gradle.kts, change the rootProject.name
-- In both engine and tests, choose your domain name for your code under kotlin directory
-- Consider renaming the <engine> project to your domain specific label
+- Various types of Question formats
+  - Mutliple choice
+  - Single text input
+  - True/false
+  - Integer value
+  - Floating point value
+- A DSL (domain specific language) to specify questions and answers
+- Ability to change the Answer to a Question and pursue that path
+- Ability to change the Answer back and keep the original Answers
+in that chain
+- Roles associated with various Questions, including
+  - Who is allowed to answer
+  - Who is allowed to see an answer
+- Question/Answer blocks that can be plugged into other
+Question/Answer chains
+- Tenative Answers which can allow the flow to continue, but
+are subject to review by a different Role
+- Templates to generate multiple copies of a Question/Answer Block
