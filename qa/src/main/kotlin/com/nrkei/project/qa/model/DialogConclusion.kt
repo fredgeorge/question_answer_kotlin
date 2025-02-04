@@ -6,9 +6,14 @@
 
 package com.nrkei.project.qa.model
 
-enum class DialogConclusion {
-    NOT_STARTED,
-    INCOMPLETE,
-    SUCCEEDED,
-    FAILED,
+class DialogConclusion private constructor() : Question {
+
+    companion object {
+        val NOT_STARTED = DialogConclusion()
+        val STARTED = DialogConclusion()
+        val SUCCEEDED = DialogConclusion()
+        val FAILED = DialogConclusion()
+    }
+
+    override fun conclusion() = this
 }

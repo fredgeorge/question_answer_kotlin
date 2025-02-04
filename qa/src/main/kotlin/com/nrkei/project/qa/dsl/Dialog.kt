@@ -6,32 +6,32 @@
 
 package com.nrkei.project.qa.dsl
 
+import com.nrkei.project.qa.model.Choice
 import com.nrkei.project.qa.model.DialogConclusion
-import com.nrkei.project.qa.model.DialogConclusion.NOT_STARTED
+import com.nrkei.project.qa.model.DialogConclusion.Companion.NOT_STARTED
 import com.nrkei.project.qa.model.Question
+import com.nrkei.project.qa.model.Choice.Companion.map
+import com.nrkei.project.qa.model.Choices
 
 // DSL syntax to specify a series of questions
 fun dialog(block: Dialog.() -> Unit) =
-    Dialog()
-        .also { it.block() }
-//        .let {it.question()}
+    Dialog().also { it.block() }
 
-// A series of questions to ascertain a result
+// A series of questions to ascertain a conclusion
 class Dialog internal constructor() {
-
     // Syntax sugar
     val first = this
     val then = this
 
     private val questionBuilders = mutableListOf<QuestionBuilder>()
 
-    infix fun ask(question: Question) =
+    infix fun ask(question: DialogQuestion) =
         QuestionBuilder(question).also {questionBuilders.add(it)}
 
     fun conclusion() = NOT_STARTED
 }
 
-class QuestionBuilder internal constructor(private val question: Question) {
+class QuestionBuilder internal constructor(private val question: DialogQuestion) {
 
     infix fun answers(block: AnswersBuilder.() -> Unit) =
         AnswersBuilder()
@@ -39,12 +39,18 @@ class QuestionBuilder internal constructor(private val question: Question) {
 }
 
 class AnswersBuilder internal constructor() {
-
+    private val choices = mutableListOf<Choice>()
+    private lateinit var answerValue: Any
     // Syntax sugar
     val on = this
 
-    infix fun answer(value: Any) = this
+    infix fun answer(value: Any) = this.also { answerValue = value }
 
     infix fun conclude(status: DialogConclusion) {
+        choices.add(Choice(answerValue, status))
     }
+
+    internal fun choices(): Map<Any, Question> = choices.map()
 }
+
+typealias DialogQuestion = (Choices) -> Question

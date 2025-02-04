@@ -6,5 +6,11 @@
 
 package com.nrkei.project.qa.model
 
-class BooleanQuestion: Question {
+import com.nrkei.project.qa.model.DialogConclusion.Companion.NOT_STARTED
+
+class BooleanQuestion(private val choices: Choices): Question {
+    init {
+        require(choices.keys.all { it in listOf(true, false) }) { "Invalid values for a true/false question"}
+    }
+    override fun conclusion() = NOT_STARTED
 }
