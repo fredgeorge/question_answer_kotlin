@@ -6,7 +6,6 @@
 
 package com.nrkei.project.qa.unit
 
-import com.nrkei.project.qa.dsl.DialogQuestion
 import org.junit.jupiter.api.Test
 import com.nrkei.project.qa.dsl.dialog
 import com.nrkei.project.qa.model.BooleanQuestion
@@ -17,13 +16,36 @@ import com.nrkei.project.qa.model.DialogConclusion.Companion.SUCCEEDED
 import org.junit.jupiter.api.Assertions.assertEquals
 
 // Ensures that a true/false question works
-class BooleanQuestionTest {
-    private val TRUE_FALSE_Q: DialogQuestion = { choices:Choices -> BooleanQuestion(choices) }
+class SimpleDialogTest {
+    private val trueFalseQuestion = { choices:Choices -> BooleanQuestion(choices) }
 
     @Test
-    fun `test true`() {
+    fun `single Boolean question`() {
         dialog {
-            first ask TRUE_FALSE_Q answers {
+            first ask trueFalseQuestion answers {
+                on answer true conclude SUCCEEDED
+                on answer false conclude FAILED
+            }
+        }.also { dialog ->
+            assertEquals(NOT_STARTED, dialog.conclusion())
+        }
+    }
+
+    @Test
+    fun `empty dialog`() {
+        dialog {}.also { dialog ->
+            assertEquals(NOT_STARTED, dialog.conclusion())
+        }
+    }
+
+    @Test
+    fun `two Boolean questions`() {
+        dialog {
+            first ask trueFalseQuestion answers {
+                on answer true conclude SUCCEEDED
+                on answer false conclude FAILED
+            }
+            then ask trueFalseQuestion answers {
                 on answer true conclude SUCCEEDED
                 on answer false conclude FAILED
             }
