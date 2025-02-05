@@ -18,12 +18,13 @@ import org.junit.jupiter.api.assertThrows
 
 // Ensures that a true/false question works
 class SimpleDialogTest {
-    private val trueFalseQuestion = { choices:Choices -> BooleanQuestion(choices) }
+    private val trueFalseQuestion1 = { choices: Choices -> BooleanQuestion(choices) }
+    private val trueFalseQuestion2 = { choices: Choices -> BooleanQuestion(choices) }
 
     @Test
     fun `single Boolean question`() {
         dialog {
-            first ask trueFalseQuestion answers {
+            first ask trueFalseQuestion1 answers {
                 on answer true conclude SUCCEEDED
                 on answer false conclude FAILED
             }
@@ -42,11 +43,11 @@ class SimpleDialogTest {
     @Test
     fun `two Boolean questions`() {
         dialog {
-            first ask trueFalseQuestion answers {
+            first ask trueFalseQuestion1 answers {
                 on answer true conclude SUCCEEDED
                 on answer false conclude FAILED
             }
-            then ask trueFalseQuestion answers {
+            then ask trueFalseQuestion2 answers {
                 on answer true conclude SUCCEEDED
                 on answer false conclude FAILED
             }
@@ -59,7 +60,7 @@ class SimpleDialogTest {
     fun `first keyword required for first question`() {
         assertThrows<IllegalArgumentException> {
             dialog {
-                then ask trueFalseQuestion answers {
+                then ask trueFalseQuestion1 answers {
                     on answer true conclude SUCCEEDED
                     on answer false conclude FAILED
                 }
@@ -71,11 +72,11 @@ class SimpleDialogTest {
     fun `first keyword only valid for first question`() {
         assertThrows<IllegalArgumentException> {
             dialog {
-                first ask trueFalseQuestion answers {
+                first ask trueFalseQuestion1 answers {
                     on answer true conclude SUCCEEDED
                     on answer false conclude FAILED
                 }
-                first ask trueFalseQuestion answers {
+                first ask trueFalseQuestion2 answers {
                     on answer true conclude SUCCEEDED
                     on answer false conclude FAILED
                 }

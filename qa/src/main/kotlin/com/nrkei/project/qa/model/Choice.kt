@@ -11,6 +11,7 @@ class Choice internal constructor(value: Any, nextQuestion: Question) {
     private val nextQuestion = Pair(value, nextQuestion)
     companion object {
         internal fun List<Choice>.map() = this.map { it.nextQuestion }.toMap()
+            .also { require(it.size == this.size) { "Duplicate possible answers specified" } }
     }
 }
 
