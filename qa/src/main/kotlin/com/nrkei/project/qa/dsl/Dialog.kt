@@ -22,11 +22,11 @@ fun dialog(block: Dialog.() -> Unit) =
 
 // A series of questions to ascertain a conclusion
 class Dialog internal constructor() {
-    // Syntax sugar
-    val first = this
-    val then = this
-
     private val questions = mutableListOf<Question>()
+
+    // Syntax sugar
+    val first get() = this.also { require(questions.isEmpty()) { "'then' keyword required for each question after the first in a dialog" } }
+    val then get() = this.also { require(questions.isNotEmpty()) { "'first' keyword required for the first question in a dialog" }}
 
     infix fun ask(question: DialogQuestion) = QuestionBuilder(question)
 

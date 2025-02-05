@@ -14,6 +14,7 @@ import com.nrkei.project.qa.model.DialogConclusion.Companion.FAILED
 import com.nrkei.project.qa.model.DialogConclusion.Companion.NOT_STARTED
 import com.nrkei.project.qa.model.DialogConclusion.Companion.SUCCEEDED
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.assertThrows
 
 // Ensures that a true/false question works
 class SimpleDialogTest {
@@ -51,6 +52,34 @@ class SimpleDialogTest {
             }
         }.also { dialog ->
             assertEquals(NOT_STARTED, dialog.conclusion())
+        }
+    }
+
+    @Test
+    fun `first keyword required for first question`() {
+        assertThrows<IllegalArgumentException> {
+            dialog {
+                then ask trueFalseQuestion answers {
+                    on answer true conclude SUCCEEDED
+                    on answer false conclude FAILED
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `first keyword only valid for first question`() {
+        assertThrows<IllegalArgumentException> {
+            dialog {
+                first ask trueFalseQuestion answers {
+                    on answer true conclude SUCCEEDED
+                    on answer false conclude FAILED
+                }
+                first ask trueFalseQuestion answers {
+                    on answer true conclude SUCCEEDED
+                    on answer false conclude FAILED
+                }
+            }
         }
     }
 }
