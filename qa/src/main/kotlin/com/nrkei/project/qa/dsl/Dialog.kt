@@ -23,24 +23,26 @@ class Dialog internal constructor() {
     val first = this
     val then = this
 
-    private val questionBuilders = mutableListOf<QuestionBuilder>()
+    private val questions = mutableListOf<Question>()
 
-    infix fun ask(question: DialogQuestion) =
-        QuestionBuilder(question).also {questionBuilders.add(it)}
+    infix fun ask(question: DialogQuestion) = QuestionBuilder(question)
 
     fun conclusion() = NOT_STARTED
+
+    inner class QuestionBuilder internal constructor(private val question: DialogQuestion) {
+
+        infix fun answers(block: AnswersBuilder.() -> Unit) =
+            AnswersBuilder()
+                .also { it.block() }
+                .let { questions.add(question(it.choices())) }
+    }
 }
 
-class QuestionBuilder internal constructor(private val question: DialogQuestion) {
-
-    infix fun answers(block: AnswersBuilder.() -> Unit) =
-        AnswersBuilder()
-            .also {it.block() }
-}
 
 class AnswersBuilder internal constructor() {
     private val choices = mutableListOf<Choice>()
     private lateinit var answerValue: Any
+
     // Syntax sugar
     val on = this
 
