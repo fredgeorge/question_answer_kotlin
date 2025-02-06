@@ -7,7 +7,7 @@
 package com.nrkei.project.qa.model
 
 import com.nrkei.project.qa.model.DialogStatus.Companion.NOT_STARTED
-import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.SUCCEEDED
+import com.nrkei.project.qa.model.DialogStatus.Companion.STARTED
 
 
 class BooleanQuestion(override val id: QuestionIdentifier, private val choices: Choices): Question {
@@ -22,7 +22,7 @@ class BooleanQuestion(override val id: QuestionIdentifier, private val choices: 
     override fun status() = answer
         ?.let {
             val next = choices[it]
-            next?.status().let { status -> if (status == SUCCEEDED) SUCCEEDED else status } }
+            next?.status().let { status -> if (status == NOT_STARTED) STARTED else status } }
         ?: NOT_STARTED
 
     override fun questionOrNull(id: QuestionIdentifier) =
