@@ -7,14 +7,15 @@
 package com.nrkei.project.qa.dsl
 
 import com.nrkei.project.qa.model.Choice
-import com.nrkei.project.qa.model.DialogConclusion
-import com.nrkei.project.qa.model.DialogConclusion.Companion.NOT_STARTED
-import com.nrkei.project.qa.model.Question
 import com.nrkei.project.qa.model.Choice.Companion.map
 import com.nrkei.project.qa.model.Choices
-import com.nrkei.project.qa.model.DialogConclusion.Companion.FAILED
-import com.nrkei.project.qa.model.DialogConclusion.Companion.STARTED
-import com.nrkei.project.qa.model.DialogConclusion.Companion.SUCCEEDED
+import com.nrkei.project.qa.model.DialogStatus
+import com.nrkei.project.qa.model.DialogStatus.Companion.NOT_STARTED
+import com.nrkei.project.qa.model.DialogStatus.Companion.STARTED
+import com.nrkei.project.qa.model.DialogStatus.DialogConclusion
+import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.FAILED
+import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.SUCCEEDED
+import com.nrkei.project.qa.model.Question
 
 // DSL syntax to specify a series of questions
 fun dialog(block: Dialog.() -> Unit) =
@@ -30,14 +31,14 @@ class Dialog internal constructor() {
 
     infix fun ask(question: DialogQuestion) = QuestionBuilder(question)
 
-    fun conclusion() = questions
-        .map { it.conclusion() }
-        .let { conclusions ->
+    fun status() = questions
+        .map { it.status() }
+        .let { statuses: List<DialogStatus> ->
             when {
-                conclusions.isEmpty() -> NOT_STARTED
-                conclusions.all { it == NOT_STARTED } -> NOT_STARTED
-                conclusions.any { it == STARTED } -> STARTED
-                conclusions.all { it == SUCCEEDED } -> SUCCEEDED
+                statuses.isEmpty() -> NOT_STARTED
+                statuses.all { it == NOT_STARTED } -> NOT_STARTED
+                statuses.any { it == STARTED } -> STARTED
+                statuses.all { it == SUCCEEDED } -> SUCCEEDED
                 else -> FAILED
             }
         }

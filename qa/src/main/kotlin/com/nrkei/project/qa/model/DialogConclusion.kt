@@ -6,14 +6,20 @@
 
 package com.nrkei.project.qa.model
 
-class DialogConclusion private constructor() : Question {
+open class DialogStatus private constructor() : Question {
 
     companion object {
-        val NOT_STARTED = DialogConclusion()
-        val STARTED = DialogConclusion()
-        val SUCCEEDED = DialogConclusion()
-        val FAILED = DialogConclusion()
+        val NOT_STARTED = DialogStatus()
+        val STARTED = DialogStatus()
     }
 
-    override fun conclusion() = this
+    override fun status() = this
+
+    class DialogConclusion private constructor() : DialogStatus() {
+
+        companion object {
+            val SUCCEEDED = DialogConclusion()
+            val FAILED = DialogConclusion()
+        }
+    }
 }

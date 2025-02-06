@@ -6,14 +6,14 @@
 
 package com.nrkei.project.qa.unit
 
-import org.junit.jupiter.api.Test
 import com.nrkei.project.qa.dsl.dialog
 import com.nrkei.project.qa.model.BooleanQuestion
 import com.nrkei.project.qa.model.Choices
-import com.nrkei.project.qa.model.DialogConclusion.Companion.FAILED
-import com.nrkei.project.qa.model.DialogConclusion.Companion.NOT_STARTED
-import com.nrkei.project.qa.model.DialogConclusion.Companion.SUCCEEDED
+import com.nrkei.project.qa.model.DialogStatus.Companion.NOT_STARTED
+import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.FAILED
+import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.SUCCEEDED
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 // Ensures that a true/false question works
@@ -29,14 +29,14 @@ class SimpleDialogTest {
                 on answer false conclude FAILED
             }
         }.also { dialog ->
-            assertEquals(NOT_STARTED, dialog.conclusion())
+            assertEquals(NOT_STARTED, dialog.status())
         }
     }
 
     @Test
     fun `empty dialog`() {
         dialog {}.also { dialog ->
-            assertEquals(NOT_STARTED, dialog.conclusion())
+            assertEquals(NOT_STARTED, dialog.status())
         }
     }
 
@@ -52,7 +52,7 @@ class SimpleDialogTest {
                 on answer false conclude FAILED
             }
         }.also { dialog ->
-            assertEquals(NOT_STARTED, dialog.conclusion())
+            assertEquals(NOT_STARTED, dialog.status())
         }
     }
 

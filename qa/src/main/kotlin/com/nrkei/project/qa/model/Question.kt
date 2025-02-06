@@ -8,6 +8,7 @@ package com.nrkei.project.qa.model
 
 // Understands a specific nugget of desired information
 interface Question {
-    fun conclusion(): DialogConclusion
+    fun status(): DialogStatus
+//    fun nextQuestion(): Question
 }
 

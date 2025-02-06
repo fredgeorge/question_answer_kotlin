@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test
 import com.nrkei.project.qa.dsl.dialog
 import com.nrkei.project.qa.model.BooleanQuestion
 import com.nrkei.project.qa.model.Choices
-import com.nrkei.project.qa.model.DialogConclusion
+import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.FAILED
+import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.SUCCEEDED
 import org.junit.jupiter.api.assertThrows
 
 class BooleanQuestionTest {
@@ -26,7 +27,7 @@ class BooleanQuestionTest {
         assertThrows<IllegalArgumentException> {
             dialog {
                 first ask trueFalseQuestion answers {
-                    on answer true conclude DialogConclusion.SUCCEEDED
+                    on answer true conclude SUCCEEDED
                 }
             }
         }
@@ -37,9 +38,9 @@ class BooleanQuestionTest {
         assertThrows<IllegalArgumentException> {
             dialog {
                 first ask trueFalseQuestion answers {
-                    on answer true conclude DialogConclusion.SUCCEEDED
-                    on answer false conclude DialogConclusion.FAILED
-                    on answer true conclude DialogConclusion.SUCCEEDED
+                    on answer true conclude SUCCEEDED
+                    on answer false conclude FAILED
+                    on answer true conclude SUCCEEDED
                 }
             }
         }
@@ -50,7 +51,7 @@ class BooleanQuestionTest {
         assertThrows<IllegalArgumentException> {
             dialog {
                 first ask trueFalseQuestion answers {
-                    on answer "whoops" conclude DialogConclusion.SUCCEEDED
+                    on answer "whoops" conclude SUCCEEDED
                 }
             }
         }
@@ -61,16 +62,16 @@ class BooleanQuestionTest {
         assertThrows<IllegalArgumentException> {
             dialog {
                 first ask trueFalseQuestion answers {
-                    on answer true conclude DialogConclusion.SUCCEEDED
-                    on answer true conclude DialogConclusion.SUCCEEDED
+                    on answer true conclude SUCCEEDED
+                    on answer true conclude SUCCEEDED
                 }
             }
         }
         assertThrows<IllegalArgumentException> {
             dialog {
                 first ask trueFalseQuestion answers {
-                    on answer false conclude DialogConclusion.FAILED
-                    on answer false conclude DialogConclusion.FAILED
+                    on answer false conclude FAILED
+                    on answer false conclude FAILED
                 }
             }
         }
