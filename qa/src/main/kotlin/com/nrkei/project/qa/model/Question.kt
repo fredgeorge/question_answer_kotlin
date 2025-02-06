@@ -11,6 +11,7 @@ interface Question {
     val id: QuestionIdentifier
     fun status(): DialogStatus
     fun questionOrNull(id: QuestionIdentifier): Question?
+    fun nextQuestion(): Question
 }
 
 internal fun Iterable<Question>.question(id: QuestionIdentifier): Question? = this
@@ -22,5 +23,11 @@ internal fun Iterable<Question>.question(id: QuestionIdentifier): Question? = th
             else -> throw IllegalStateException("Multiple questions found with id $id")
         }
     }
+
+internal fun Iterable<Question>.nextQuestion(): Question? {
+    forEach { question ->
+        question.nextQuestion().also { next -> if (next !is DialogStatus.DialogConclusion) return next }}
+    return null
+}
 
 

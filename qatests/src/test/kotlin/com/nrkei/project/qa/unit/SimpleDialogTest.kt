@@ -19,8 +19,10 @@ import org.junit.jupiter.api.assertThrows
 
 // Ensures that a true/false question works
 class SimpleDialogTest {
-    private val trueFalseQuestion1 = { choices: Choices -> BooleanQuestion("trueFalseQuestion1", choices) }
-    private val trueFalseQuestion2 = { choices: Choices -> BooleanQuestion("trueFalseQuestion2", choices) }
+    private val trueFalseQuestion1Id = QuestionIdentifier("trueFalseQuestion1")
+    private val trueFalseQuestion2Id = QuestionIdentifier("trueFalseQuestion2")
+    private val trueFalseQuestion1 = { choices: Choices -> BooleanQuestion(trueFalseQuestion1Id, choices) }
+    private val trueFalseQuestion2 = { choices: Choices -> BooleanQuestion(trueFalseQuestion2Id, choices) }
 
     @Test
     fun `single question`() {
@@ -31,10 +33,9 @@ class SimpleDialogTest {
             }
         }.also { dialog ->
             assertEquals(NOT_STARTED, dialog.status())
-            QuestionIdentifier("trueFalseQuestion1").also { id ->
-                assertEquals(id, dialog.question(id).id)
-                assertThrows<IllegalArgumentException> { dialog.question(QuestionIdentifier("invalid")) }
-            }
+            assertEquals(trueFalseQuestion1Id, dialog.question(trueFalseQuestion1Id).id)
+            assertThrows<IllegalArgumentException> { dialog.question(trueFalseQuestion2Id) }
+            assertEquals(trueFalseQuestion1Id, dialog.nextQuestion().id)
         }
     }
 
@@ -42,6 +43,7 @@ class SimpleDialogTest {
     fun `empty dialog`() {
         dialog {}.also { dialog ->
             assertEquals(NOT_STARTED, dialog.status())
+            assertThrows<IllegalStateException> { dialog.nextQuestion() }
         }
     }
 
@@ -58,6 +60,7 @@ class SimpleDialogTest {
             }
         }.also { dialog ->
             assertEquals(NOT_STARTED, dialog.status())
+            assertEquals(trueFalseQuestion1Id, dialog.nextQuestion().id)
         }
     }
 

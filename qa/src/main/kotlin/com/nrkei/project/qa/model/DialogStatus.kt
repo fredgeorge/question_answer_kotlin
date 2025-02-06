@@ -17,6 +17,8 @@ open class DialogStatus private constructor(idLabel: String) : Question {
     override fun questionOrNull(id: QuestionIdentifier) =
         if (this.id == id) this else null
 
+    override fun nextQuestion() = this
+
     override fun status() = this
 
     class DialogConclusion private constructor(idLabel: String) : DialogStatus(idLabel) {

@@ -45,6 +45,11 @@ class Dialog internal constructor() {
     fun question(id: QuestionIdentifier) = questions.question(id)
         ?: throw IllegalArgumentException("Question with id $id does not exist")
 
+    fun nextQuestionOrNull() = questions.nextQuestion()
+
+    fun nextQuestion() = nextQuestionOrNull()
+        ?: throw IllegalStateException("All necessary questions have been answered")
+
     inner class QuestionBuilder internal constructor(private val question: DialogQuestion) {
 
         infix fun answers(block: AnswersBuilder.() -> Unit) =

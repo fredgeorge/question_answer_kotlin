@@ -20,4 +20,6 @@ class BooleanQuestion(override val id: QuestionIdentifier, private val choices: 
 
     override fun questionOrNull(id: QuestionIdentifier) =
         if (this.id == id) this else choices.values.question(id)
+
+    override fun nextQuestion() = this
 }
