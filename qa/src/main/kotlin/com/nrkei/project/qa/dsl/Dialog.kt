@@ -26,7 +26,7 @@ class Dialog internal constructor() {
 
     // Syntax sugar
     val first get() = this.also { require(questions.isEmpty()) { "'then' keyword required for each question after the first in a dialog" } }
-    val then get() = this.also { require(questions.isNotEmpty()) { "'first' keyword required for the first question in a dialog" }}
+    val then get() = this.also { require(questions.isNotEmpty()) { "'first' keyword required for the first question in a dialog" } }
 
     infix fun ask(question: DialogQuestion) = QuestionBuilder(question)
 
@@ -74,7 +74,17 @@ class AnswersBuilder internal constructor() {
         choices.add(Choice(answerValue, status))
     }
 
+    infix fun ask(question: DialogQuestion) = QuestionBuilder(question)
+
     internal fun choices(): Map<Any, Question> = choices.map()
+
+    inner class QuestionBuilder internal constructor(private val question: DialogQuestion) {
+
+        infix fun answers(block: AnswersBuilder.() -> Unit) =
+            AnswersBuilder()
+                .also { it.block() }
+                .let { choices.add(Choice(answerValue, question(it.choices()))) }
+    }
 }
 
 typealias DialogQuestion = (Choices) -> Question

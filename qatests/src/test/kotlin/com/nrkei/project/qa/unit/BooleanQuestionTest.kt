@@ -15,18 +15,18 @@ import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.SUCCEE
 import org.junit.jupiter.api.assertThrows
 
 class BooleanQuestionTest {
-    private val trueFalseQuestion = { choices: Choices -> BooleanQuestion("trueFalseQuestion", choices) }
+    private val trueFalse = { choices: Choices -> BooleanQuestion("trueFalse", choices) }
 
     @Test
     fun `Must have two choices`() {
         assertThrows<IllegalArgumentException> {
             dialog {
-                first ask trueFalseQuestion answers { }
+                first ask trueFalse answers { }
             }
         }
         assertThrows<IllegalArgumentException> {
             dialog {
-                first ask trueFalseQuestion answers {
+                first ask trueFalse answers {
                     on answer true conclude SUCCEEDED
                 }
             }
@@ -37,7 +37,7 @@ class BooleanQuestionTest {
     fun `Cannot specify the same answer twice`() {
         assertThrows<IllegalArgumentException> {
             dialog {
-                first ask trueFalseQuestion answers {
+                first ask trueFalse answers {
                     on answer true conclude SUCCEEDED
                     on answer false conclude FAILED
                     on answer true conclude SUCCEEDED
@@ -50,7 +50,7 @@ class BooleanQuestionTest {
     fun `Choices must be true or false`() {
         assertThrows<IllegalArgumentException> {
             dialog {
-                first ask trueFalseQuestion answers {
+                first ask trueFalse answers {
                     on answer "whoops" conclude SUCCEEDED
                 }
             }
@@ -61,7 +61,7 @@ class BooleanQuestionTest {
     fun `Choices cannot both be true or both be false`() {
         assertThrows<IllegalArgumentException> {
             dialog {
-                first ask trueFalseQuestion answers {
+                first ask trueFalse answers {
                     on answer true conclude SUCCEEDED
                     on answer true conclude SUCCEEDED
                 }
@@ -69,7 +69,7 @@ class BooleanQuestionTest {
         }
         assertThrows<IllegalArgumentException> {
             dialog {
-                first ask trueFalseQuestion answers {
+                first ask trueFalse answers {
                     on answer false conclude FAILED
                     on answer false conclude FAILED
                 }

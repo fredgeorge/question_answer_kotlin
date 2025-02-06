@@ -19,27 +19,27 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 // Ensures that a true/false question works
-class SimpleDialogTest {
-    private val trueFalseQuestion1Id = QuestionIdentifier("trueFalseQuestion1")
-    private val trueFalseQuestion2Id = QuestionIdentifier("trueFalseQuestion2")
-    private val trueFalseQuestion1 = { choices: Choices -> BooleanQuestion(trueFalseQuestion1Id, choices) }
-    private val trueFalseQuestion2 = { choices: Choices -> BooleanQuestion(trueFalseQuestion2Id, choices) }
+class OneLevelDialogTest {
+    private val trueFalseId1 = QuestionIdentifier("trueFalse1")
+    private val trueFalseId2 = QuestionIdentifier("trueFalse2")
+    private val trueFalse1 = { choices: Choices -> BooleanQuestion(trueFalseId1, choices) }
+    private val trueFalse2 = { choices: Choices -> BooleanQuestion(trueFalseId2, choices) }
 
     @Test
     fun `single question`() {
         dialog {
-            first ask trueFalseQuestion1 answers {
+            first ask trueFalse1 answers {
                 on answer true conclude SUCCEEDED
                 on answer false conclude FAILED
             }
         }.also { dialog ->
             assertEquals(NOT_STARTED, dialog.status())
-            assertEquals(trueFalseQuestion1Id, dialog.question(trueFalseQuestion1Id).id)
-            assertThrows<IllegalArgumentException> { dialog.question(trueFalseQuestion2Id) }
-            assertEquals(trueFalseQuestion1Id, dialog.nextQuestion().id)
+            assertEquals(trueFalseId1, dialog.question(trueFalseId1).id)
+            assertThrows<IllegalArgumentException> { dialog.question(trueFalseId2) }
+            assertEquals(trueFalseId1, dialog.nextQuestion().id)
             dialog.nextQuestion().be(true)
             assertEquals(SUCCEEDED, dialog.status())
-            dialog.question(trueFalseQuestion1Id).be(false)
+            dialog.question(trueFalseId1).be(false)
             assertEquals(FAILED, dialog.status())
             assertThrows<IllegalStateException> { dialog.nextQuestion() }
         }
@@ -56,25 +56,25 @@ class SimpleDialogTest {
     @Test
     fun `two Boolean questions`() {
         dialog {
-            first ask trueFalseQuestion1 answers {
+            first ask trueFalse1 answers {
                 on answer true conclude SUCCEEDED
                 on answer false conclude FAILED
             }
-            then ask trueFalseQuestion2 answers {
+            then ask trueFalse2 answers {
                 on answer true conclude SUCCEEDED
                 on answer false conclude FAILED
             }
         }.also { dialog ->
             assertEquals(NOT_STARTED, dialog.status())
-            assertEquals(trueFalseQuestion1Id, dialog.nextQuestion().id)
+            assertEquals(trueFalseId1, dialog.nextQuestion().id)
             dialog.nextQuestion().be(false)
             assertEquals(FAILED, dialog.status()) // One question answered, one more to go
-            dialog.question(trueFalseQuestion1Id).be(true)
+            dialog.question(trueFalseId1).be(true)
             assertEquals(STARTED, dialog.status())
-            assertEquals(trueFalseQuestion2Id, dialog.nextQuestion().id)
+            assertEquals(trueFalseId2, dialog.nextQuestion().id)
             dialog.nextQuestion().be(false)
             assertEquals(FAILED, dialog.status()) // First question SUCCEEDED, but second FAILED
-            dialog.question(trueFalseQuestion2Id).be(true) // Change answer for second question
+            dialog.question(trueFalseId2).be(true) // Change answer for second question
             assertEquals(SUCCEEDED, dialog.status()) // Both questions SUCCEEDED, so dialog SUCCEEDED
             assertThrows<IllegalStateException> { dialog.nextQuestion() } // No more questions!
 
@@ -85,7 +85,7 @@ class SimpleDialogTest {
     fun `first keyword required for first question`() {
         assertThrows<IllegalArgumentException> {
             dialog {
-                then ask trueFalseQuestion1 answers {
+                then ask trueFalse1 answers {
                     on answer true conclude SUCCEEDED
                     on answer false conclude FAILED
                 }
@@ -97,11 +97,11 @@ class SimpleDialogTest {
     fun `first keyword only valid for first question`() {
         assertThrows<IllegalArgumentException> {
             dialog {
-                first ask trueFalseQuestion1 answers {
+                first ask trueFalse1 answers {
                     on answer true conclude SUCCEEDED
                     on answer false conclude FAILED
                 }
-                first ask trueFalseQuestion2 answers {
+                first ask trueFalse2 answers {
                     on answer true conclude SUCCEEDED
                     on answer false conclude FAILED
                 }
@@ -112,16 +112,16 @@ class SimpleDialogTest {
     @Test
     fun `two questions cannot have the same id`() {
         dialog {
-            first ask trueFalseQuestion1 answers {
+            first ask trueFalse1 answers {
                 on answer true conclude SUCCEEDED
                 on answer false conclude FAILED
             }
-            then ask trueFalseQuestion1 answers {
+            then ask trueFalse1 answers {
                 on answer true conclude SUCCEEDED
                 on answer false conclude FAILED
             }
         }.also { dialog ->
-            assertThrows<IllegalStateException> { dialog.question(QuestionIdentifier("trueFalseQuestion1")) }
+            assertThrows<IllegalStateException> { dialog.question(QuestionIdentifier("trueFalse1")) }
         }
     }
 }
