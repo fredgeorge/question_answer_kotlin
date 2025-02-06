@@ -17,4 +17,7 @@ class BooleanQuestion(override val id: QuestionIdentifier, private val choices: 
     constructor(idLabel: String, choices: Choices) : this(QuestionIdentifier(idLabel), choices)
 
     override fun status() = NOT_STARTED
+
+    override fun questionOrNull(id: QuestionIdentifier) =
+        if (this.id == id) this else choices.values.question(id)
 }

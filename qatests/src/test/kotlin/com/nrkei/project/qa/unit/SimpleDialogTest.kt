@@ -12,6 +12,7 @@ import com.nrkei.project.qa.model.Choices
 import com.nrkei.project.qa.model.DialogStatus.Companion.NOT_STARTED
 import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.FAILED
 import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.SUCCEEDED
+import com.nrkei.project.qa.model.QuestionIdentifier
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,7 +23,7 @@ class SimpleDialogTest {
     private val trueFalseQuestion2 = { choices: Choices -> BooleanQuestion("trueFalseQuestion2", choices) }
 
     @Test
-    fun `single Boolean question`() {
+    fun `single question`() {
         dialog {
             first ask trueFalseQuestion1 answers {
                 on answer true conclude SUCCEEDED
@@ -30,6 +31,10 @@ class SimpleDialogTest {
             }
         }.also { dialog ->
             assertEquals(NOT_STARTED, dialog.status())
+            QuestionIdentifier("trueFalseQuestion1").also { id ->
+                assertEquals(id, dialog.question(id).id)
+                assertThrows<IllegalArgumentException> { dialog.question(QuestionIdentifier("invalid")) }
+            }
         }
     }
 
@@ -81,6 +86,22 @@ class SimpleDialogTest {
                     on answer false conclude FAILED
                 }
             }
+        }
+    }
+
+    @Test
+    fun `two questions cannot have the same id`() {
+        dialog {
+            first ask trueFalseQuestion1 answers {
+                on answer true conclude SUCCEEDED
+                on answer false conclude FAILED
+            }
+            then ask trueFalseQuestion1 answers {
+                on answer true conclude SUCCEEDED
+                on answer false conclude FAILED
+            }
+        }.also { dialog ->
+            assertThrows<IllegalStateException> { dialog.question(QuestionIdentifier("trueFalseQuestion1")) }
         }
     }
 }

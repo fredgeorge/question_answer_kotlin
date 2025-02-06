@@ -10,5 +10,17 @@ package com.nrkei.project.qa.model
 interface Question {
     val id: QuestionIdentifier
     fun status(): DialogStatus
+    fun questionOrNull(id: QuestionIdentifier): Question?
 }
+
+internal fun Iterable<Question>.question(id: QuestionIdentifier): Question? = this
+    .mapNotNull { it.questionOrNull(id) }
+    .let {
+        when {
+            it.isEmpty() -> null
+            it.size == 1 -> it.first()
+            else -> throw IllegalStateException("Multiple questions found with id $id")
+        }
+    }
+
 

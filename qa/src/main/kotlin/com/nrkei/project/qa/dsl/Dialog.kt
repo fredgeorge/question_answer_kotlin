@@ -6,16 +6,15 @@
 
 package com.nrkei.project.qa.dsl
 
-import com.nrkei.project.qa.model.Choice
+import com.nrkei.project.qa.model.*
 import com.nrkei.project.qa.model.Choice.Companion.map
-import com.nrkei.project.qa.model.Choices
-import com.nrkei.project.qa.model.DialogStatus
 import com.nrkei.project.qa.model.DialogStatus.Companion.NOT_STARTED
 import com.nrkei.project.qa.model.DialogStatus.Companion.STARTED
 import com.nrkei.project.qa.model.DialogStatus.DialogConclusion
+import com.nrkei.project.qa.model.Question
 import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.FAILED
 import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.SUCCEEDED
-import com.nrkei.project.qa.model.Question
+import java.lang.IllegalArgumentException
 
 // DSL syntax to specify a series of questions
 fun dialog(block: Dialog.() -> Unit) =
@@ -43,6 +42,9 @@ class Dialog internal constructor() {
             }
         }
 
+    fun question(id: QuestionIdentifier) = questions.question(id)
+        ?: throw IllegalArgumentException("Question with id $id does not exist")
+
     inner class QuestionBuilder internal constructor(private val question: DialogQuestion) {
 
         infix fun answers(block: AnswersBuilder.() -> Unit) =
@@ -51,7 +53,6 @@ class Dialog internal constructor() {
                 .let { questions.add(question(it.choices())) }
     }
 }
-
 
 class AnswersBuilder internal constructor() {
     private val choices = mutableListOf<Choice>()
