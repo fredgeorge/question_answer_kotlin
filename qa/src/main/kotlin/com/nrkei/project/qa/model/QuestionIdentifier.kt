@@ -6,9 +6,4 @@
 
 package com.nrkei.project.qa.model
 
-// Understands a specific nugget of desired information
-interface Question {
-    val id: QuestionIdentifier
-    fun status(): DialogStatus
-}
-
+data class QuestionIdentifier(private val label: String)

@@ -18,8 +18,8 @@ import org.junit.jupiter.api.assertThrows
 
 // Ensures that a true/false question works
 class SimpleDialogTest {
-    private val trueFalseQuestion1 = { choices: Choices -> BooleanQuestion(choices) }
-    private val trueFalseQuestion2 = { choices: Choices -> BooleanQuestion(choices) }
+    private val trueFalseQuestion1 = { choices: Choices -> BooleanQuestion("trueFalseQuestion1", choices) }
+    private val trueFalseQuestion2 = { choices: Choices -> BooleanQuestion("trueFalseQuestion2", choices) }
 
     @Test
     fun `single Boolean question`() {

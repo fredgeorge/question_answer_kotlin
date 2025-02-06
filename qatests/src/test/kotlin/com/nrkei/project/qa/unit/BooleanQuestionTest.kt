@@ -15,7 +15,7 @@ import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.SUCCEE
 import org.junit.jupiter.api.assertThrows
 
 class BooleanQuestionTest {
-    private val trueFalseQuestion = { choices: Choices -> BooleanQuestion(choices) }
+    private val trueFalseQuestion = { choices: Choices -> BooleanQuestion("trueFalseQuestion", choices) }
 
     @Test
     fun `Must have two choices`() {
