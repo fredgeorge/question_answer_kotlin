@@ -10,6 +10,7 @@ import com.nrkei.project.qa.dsl.dialog
 import com.nrkei.project.qa.model.BooleanQuestion
 import com.nrkei.project.qa.model.Choices
 import com.nrkei.project.qa.model.DialogStatus.Companion.NOT_STARTED
+import com.nrkei.project.qa.model.DialogStatus.Companion.STARTED
 import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.FAILED
 import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.SUCCEEDED
 import com.nrkei.project.qa.model.QuestionIdentifier
@@ -36,6 +37,11 @@ class SimpleDialogTest {
             assertEquals(trueFalseQuestion1Id, dialog.question(trueFalseQuestion1Id).id)
             assertThrows<IllegalArgumentException> { dialog.question(trueFalseQuestion2Id) }
             assertEquals(trueFalseQuestion1Id, dialog.nextQuestion().id)
+            dialog.nextQuestion().be(true)
+            assertEquals(SUCCEEDED, dialog.status())
+            dialog.question(trueFalseQuestion1Id).be(false)
+            assertEquals(FAILED, dialog.status())
+            assertThrows<IllegalStateException> { dialog.nextQuestion() }
         }
     }
 
@@ -61,6 +67,17 @@ class SimpleDialogTest {
         }.also { dialog ->
             assertEquals(NOT_STARTED, dialog.status())
             assertEquals(trueFalseQuestion1Id, dialog.nextQuestion().id)
+            dialog.nextQuestion().be(false)
+            assertEquals(FAILED, dialog.status()) // One question answered, one more to go
+            dialog.question(trueFalseQuestion1Id).be(true)
+            assertEquals(STARTED, dialog.status())
+            assertEquals(trueFalseQuestion2Id, dialog.nextQuestion().id)
+            dialog.nextQuestion().be(false)
+            assertEquals(FAILED, dialog.status()) // First question SUCCEEDED, but second FAILED
+            dialog.question(trueFalseQuestion2Id).be(true) // Change answer for second question
+            assertEquals(SUCCEEDED, dialog.status()) // Both questions SUCCEEDED, so dialog SUCCEEDED
+            assertThrows<IllegalStateException> { dialog.nextQuestion() } // No more questions!
+
         }
     }
 

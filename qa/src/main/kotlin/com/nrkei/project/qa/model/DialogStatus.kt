@@ -19,7 +19,11 @@ open class DialogStatus private constructor(idLabel: String) : Question {
 
     override fun nextQuestion() = this
 
+    override fun be(value: Any) = throw IllegalStateException("This is not a valid Question; it cannot be answered")
+
     override fun status() = this
+
+    override fun toString() = "Status: $id"
 
     class DialogConclusion private constructor(idLabel: String) : DialogStatus(idLabel) {
 
@@ -27,5 +31,7 @@ open class DialogStatus private constructor(idLabel: String) : Question {
             val SUCCEEDED = DialogConclusion("SUCCEEDED")
             val FAILED = DialogConclusion("FAILED")
         }
+
+        override fun be(value: Any) = throw IllegalArgumentException("Terminal condition reached; it cannot be answered")
     }
 }

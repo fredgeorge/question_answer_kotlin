@@ -12,6 +12,7 @@ interface Question {
     fun status(): DialogStatus
     fun questionOrNull(id: QuestionIdentifier): Question?
     fun nextQuestion(): Question
+    fun be(value: Any)
 }
 
 internal fun Iterable<Question>.question(id: QuestionIdentifier): Question? = this

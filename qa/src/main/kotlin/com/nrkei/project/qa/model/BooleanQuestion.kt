@@ -7,6 +7,7 @@
 package com.nrkei.project.qa.model
 
 import com.nrkei.project.qa.model.DialogStatus.Companion.NOT_STARTED
+import com.nrkei.project.qa.model.DialogStatus.DialogConclusion.Companion.SUCCEEDED
 
 
 class BooleanQuestion(override val id: QuestionIdentifier, private val choices: Choices): Question {
@@ -16,10 +17,28 @@ class BooleanQuestion(override val id: QuestionIdentifier, private val choices: 
     }
     constructor(idLabel: String, choices: Choices) : this(QuestionIdentifier(idLabel), choices)
 
-    override fun status() = NOT_STARTED
+    private var answer: Boolean? = null
+
+    override fun status() = answer
+        ?.let {
+            val next = choices[it]
+            next?.status().let { status -> if (status == SUCCEEDED) SUCCEEDED else status } }
+        ?: NOT_STARTED
 
     override fun questionOrNull(id: QuestionIdentifier) =
         if (this.id == id) this else choices.values.question(id)
 
-    override fun nextQuestion() = this
+    override fun nextQuestion() = answer
+        ?.let { choices[it]
+            ?.nextQuestion()
+            ?: throw IllegalStateException("Missing choice for true or false") }
+        ?: this
+
+    override fun be(value: Any) {
+        if (value is Boolean) be(value) else throw IllegalArgumentException("Answer must be true or false")
+    }
+
+    private fun be(value: Boolean) {
+        answer = value
+    }
 }

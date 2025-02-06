@@ -38,8 +38,10 @@ class Dialog internal constructor() {
                 statuses.all { it == NOT_STARTED } -> NOT_STARTED
                 statuses.any { it == STARTED } -> STARTED
                 statuses.all { it == SUCCEEDED } -> SUCCEEDED
+                statuses.any { it == FAILED } -> FAILED
+                statuses.any { it == SUCCEEDED } -> STARTED
                 else -> FAILED
-            }
+            }.also { println(it.toString()) }
         }
 
     fun question(id: QuestionIdentifier) = questions.question(id)
